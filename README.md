@@ -110,13 +110,13 @@ src/main/java/
 │ └── ErrorDialog.java
 │
 └── service/ // Person C
-├── OpenAIClient.java // Singleton
-├── OpenAIService.java
-├── PromptBuilder.java
-├── LibraryStorage.java
-├── ExportService.java
-├── ImageGenService.java // OPTIONAL
-└── TTSService.java // OPTIONAL
+│ ├── OpenAIClient.java // Singleton
+│ ├── OpenAIService.java
+│ ├── PromptBuilder.java
+│ ├── LibraryStorage.java
+│ ├── ExportService.java
+│ ├── ImageGenService.java // OPTIONAL
+│ └── TTSService.java // OPTIONAL
 ```
 
 ## Core Design Patterns Used
