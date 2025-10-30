@@ -64,7 +64,7 @@ Player chooses → story branches → continues with new scenes.
 
 ## Proposed File Structure (WIP)
 ```
-src/
+src/main/java/
 ├── Main.java
 │
 ├── model/ // Person A
