@@ -19,31 +19,31 @@ Players create a **character**, define a **world**, choose a **genre**, and then
 - Text-to-Speech narration
 
 ## Example Program Flow  
-### 1. Select a Genre  
+#### 1. Select a Genre  
 Fantasy | Sci-Fi | Mystery | Romance | Horror
 
 User selects **Fantasy** → clicks **Start**
 
-### 2. Create a Character  
+#### 2. Create a Character  
 | Field | Example Input |
 |-------|---------------|
 | Name | Elowen |
 | Trait | Brave |
 | Backstory | Exiled princess of the Moon Kingdom |
 
-### 3. Build the World  
+#### 3. Build the World  
 | Field | Example Input |
 |-------|---------------|
 | Location | Whispering Forest |
 | Rules | Magic is forbidden by the High Council |
 | History | Ancient war between light and shadow |
 
-### 4. Customize Story Style  
+#### 4. Customize Story Style  
 - Length: **Medium**
 - Complexity: **Child-Friendly**
 - Style: **Descriptive**
 
-### 5. Story Appears  
+#### 5. Story Appears  
 Scene 1: Elowen steps into the Whispering Forest...
 A) Follow a glowing trail
 B) Call out into the trees
