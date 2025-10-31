@@ -1,8 +1,4 @@
 # AI Story Generator — Choose Your Own Adventure  
-**Team Members:**
-- **Rebecca Smith**
-- **Viet Nguyen**
-- **Tanya Patel**
 
 ## Overview  
 The **AI Story Generator** is an interactive *Choose Your Own Adventure* storytelling application.  
@@ -17,6 +13,14 @@ Players create a **character**, define a **world**, choose a **genre**, and then
 **Optional enhancements that could be included later:**
 - AI Image Generation (ex: DALL·E)
 - Text-to-Speech narration
+
+## Team Members  
+| Team Member | Role | Responsibilities |
+|------------|------|----------------|
+| **Rebecca Smith** | Story & Model Engineer | Story data structures, character/world models, genre strategies |
+| **Viet Nguyen** | UI/UX Engineer | All visual panels, layout flow, displaying story & choices |
+| **Tanya Patel** | Controller & AI Engineer | Game logic, OpenAI integration, saving & exporting stories |
+
 
 ## Example Program Flow  
 #### 1. Select a Genre  
@@ -50,21 +54,32 @@ B) Call out into the trees
 
 Player chooses → story branches → continues with new scenes.
 
-## Team Roles  
-| Team Member | Role | Responsibilities |
-|------------|------|----------------|
-| **Rebecca Smith** | Story & Model Engineer | Story data structures, character/world models, genre strategies |
-| **Viet Nguyen** | UI/UX Engineer | All visual panels, layout flow, displaying story & choices |
-| **Tanya Patel** | Controller & AI Engineer | Game logic, OpenAI integration, saving & exporting stories |
+
+## Core Design Patterns Used
+
+| Pattern | Purpose in This Project |
+|--------|-------------------------|
+| **MVC** | Separates UI, logic, and data for clean development flow |
+| **Strategy** | Each genre generates text differently without changing main game logic |
+| **Factory** | Returns correct genre strategy based on player choice |
+| **Singleton** | Ensures one shared OpenAI client instance |
 
 
+
+## Story Saving & Export Features  
+Users can:
+- Save stories locally (JSON)
+- Tag and favorite stored stories
+- Export final stories as **.txt** or **.md**
+- *(Optional)* Generate matching images
+- *(Optional)* Listen to narration audio
 
 ## Proposed File Structure (WIP)
 ```
 src/main/java/
 ├── Main.java
 │
-├── model/ // Person A
+├── model/ // Story & Model Engineer
 │ ├── story/
 │ │ ├── Scene.java
 │ │ ├── Choice.java
@@ -86,14 +101,14 @@ src/main/java/
 │ ├── StoryRecord.java
 │ └── LibraryModel.java
 │
-├── controller/ // Person C
+├── controller/ // Controller & AI Engineer
 │ ├── IGameController.java
 │ ├── GameController.java
 │ ├── CharacterController.java
 │ ├── WorldController.java
 │ └── LibraryController.java
 │
-├── view/ // Person B
+├── view/ // UI/UX Engineer
 │ ├── MainFrame.java
 │ ├── GenrePanel.java
 │ ├── CharacterPanel.java
@@ -106,32 +121,13 @@ src/main/java/
 │ ├── LoadingIndicator.java
 │ └── ErrorDialog.java
 │
-└── service/ // Person C
+└── service/ // Controller & AI Engineer
   ├── OpenAIClient.java // Singleton
   ├── OpenAIService.java
   ├── PromptBuilder.java
   ├── LibraryStorage.java
   ├── ExportService.java
-  ├── ImageGenService.java // OPTIONAL
-  └── TTSService.java // OPTIONAL
+  └── ImageGenService.java // OPTIONAL
+
 ```
-
-## Core Design Patterns Used
-
-| Pattern | Purpose in This Project |
-|--------|-------------------------|
-| **MVC** | Separates UI, logic, and data for clean development flow |
-| **Strategy** | Each genre generates text differently without changing main game logic |
-| **Factory** | Returns correct genre strategy based on player choice |
-| **Singleton** | Ensures one shared OpenAI client instance |
-
----
-
-## Story Saving & Export Features  
-Users can:
-- Save stories locally (JSON)
-- Tag and favorite stored stories
-- Export final stories as **.txt** or **.md**
-- *(Optional)* Generate matching images
-- *(Optional)* Listen to narration audio
 
