@@ -72,7 +72,6 @@ Users can:
 - Tag and favorite stored stories
 - Export final stories as **.txt** or **.md**
 - *(Optional)* Generate matching images
-- *(Optional)* Listen to narration audio
 
 ## Proposed File Structure (WIP)
 ```
