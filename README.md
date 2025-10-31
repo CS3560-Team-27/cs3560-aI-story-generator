@@ -12,7 +12,6 @@ Players create a **character**, define a **world**, choose a **genre**, and then
 
 **Optional enhancements that could be included later:**
 - AI Image Generation (ex: DALL·E)
-- Text-to-Speech narration
 
 ## Team Members  
 | Team Member | Role | Responsibilities |
