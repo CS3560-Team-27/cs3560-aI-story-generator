@@ -4,15 +4,6 @@
 The **AI Story Generator** is an interactive *Choose Your Own Adventure* storytelling application.  
 Players create a **character**, define a **world**, choose a **genre**, and then experience a branching narrative where **every choice shapes the story**. Users can customize story length, complexity, and writing style. Finished stories can be **saved, tagged, favorited, and exported**.
 
-**This project is designed using:**
-- **MVC Architecture**
-- **Strategy Pattern** (for genre behavior & story flow)
-- **Factory Pattern** (for generating correct genre strategy)
-- **Singleton Pattern** (for shared AI client instance)
-
-**Optional enhancements that could be included later:**
-- AI Image Generation (ex: DALL·E)
-
 ## Team Members  
 | Team Member | Role | Responsibilities |
 |------------|------|----------------|
