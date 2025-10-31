@@ -135,8 +135,3 @@ Users can:
 - *(Optional)* Generate matching images
 - *(Optional)* Listen to narration audio
 
-## Future Enhancements  
-- Multi-choice branching (more than A/B)
-- Visual story map tree
-- Multiplayer co-op storytelling mode
-- Style Mode: “Poetic”, “Comic”, “Dark Realism”
