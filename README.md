@@ -53,14 +53,11 @@ Player chooses → story branches → continues with new scenes.
 ## Team Roles  
 | Team Member | Role | Responsibilities |
 |------------|------|----------------|
-| **Person A** | Story & Model Engineer | Story data structures, character/world models, genre strategies |
-| **Person B** | UI/UX Engineer | All visual panels, layout flow, displaying story & choices |
-| **Person C** | Controller & AI Engineer | Game logic, OpenAI integration, saving & exporting stories |
+| **Rebecca Smith** | Story & Model Engineer | Story data structures, character/world models, genre strategies |
+| **Viet Nguyen** | UI/UX Engineer | All visual panels, layout flow, displaying story & choices |
+| **Tanya Patel** | Controller & AI Engineer | Game logic, OpenAI integration, saving & exporting stories |
 
-**Assigned Roles:**  
-- Person A = Rebecca Smith
-- Person B = Viet Nguyen  
-- Person C = Tanya Patel  
+
 
 ## Proposed File Structure (WIP)
 ```
