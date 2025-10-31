@@ -104,9 +104,8 @@ src/main/java/
 
 ```
 
-## ✅ Next Steps
+## Next Steps
 - Integrate OpenAI text generation for dynamic storytelling
 - Add progress indicator UI
 
-## 📄 License
-This project is for educational use under the Cal Poly Pomona CS 3560 course.
+
