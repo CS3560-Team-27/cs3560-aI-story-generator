@@ -1,5 +1,4 @@
 package model.story;
-
 import java.util.ArrayList;
 import java.util.List;
 

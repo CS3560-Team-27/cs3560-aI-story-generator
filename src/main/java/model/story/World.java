@@ -9,6 +9,7 @@ public class World {
     public World(String location) {
         this.location = location;
         this.rule = "No rules";
+        // dummy default text
         this.history = "An ancient war scarred the land";
     }
 
@@ -16,6 +17,7 @@ public class World {
     public World(String location, String rule) {
         this.location = location;
         this.rule = rule;
+        // dummy default text
         this.history = "An ancient war scarred the land";
     }
 
