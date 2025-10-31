@@ -53,54 +53,54 @@ src/main/java/
 ├── Main.java
 │
 ├── model/ // Story & Model Engineer
-│ ├── story/
-│ │ ├── Scene.java
-│ │ ├── Choice.java
-│ │ ├── StoryState.java
-│ │ ├── StoryModel.java
-│ │ ├── Character.java
-│ │ └── World.java
-│ │
-│ ├── strategy/
-│ │ ├── AIStrategy.java
-│ │ ├── FantasyStrategy.java
-│ │ ├── SciFiStrategy.java
-│ │ ├── MysteryStrategy.java
-│ │ ├── RomanceStrategy.java
-│ │ ├── HorrorStrategy.java
-│ │ └── StrategyFactory.java
-│ │
-│ └── library/
-│ ├── StoryRecord.java
-│ └── LibraryModel.java
+│   ├── story/
+│   │   ├── Scene.java
+│   │   ├── Choice.java
+│   │   ├── StoryState.java
+│   │   ├── StoryModel.java
+│   │   ├── Character.java
+│   │   └── World.java
+│   │
+│   ├── strategy/
+│   │   ├── AIStrategy.java
+│   │   ├── FantasyStrategy.java
+│   │   ├── SciFiStrategy.java
+│   │   ├── MysteryStrategy.java
+│   │   ├── RomanceStrategy.java
+│   │   ├── HorrorStrategy.java
+│   │   └── StrategyFactory.java
+│   │
+│   └── library/
+│       ├── StoryRecord.java
+│       └── LibraryModel.java
 │
 ├── controller/ // Controller & AI Engineer
-│ ├── IGameController.java
-│ ├── GameController.java
-│ ├── CharacterController.java
-│ ├── WorldController.java
-│ └── LibraryController.java
+│   ├── IGameController.java
+│   ├── GameController.java
+│   ├── CharacterController.java
+│   ├── WorldController.java
+│   └── LibraryController.java
 │
 ├── view/ // UI/UX Engineer
-│ ├── MainFrame.java
-│ ├── GenrePanel.java
-│ ├── CharacterPanel.java
-│ ├── WorldPanel.java
-│ ├── ControlsPanel.java
-│ ├── StoryPanel.java
-│ ├── ChoicePanel.java
-│ ├── LibraryPanel.java
-│ └── components/
-│ ├── LoadingIndicator.java
-│ └── ErrorDialog.java
+│   ├── MainFrame.java
+│   ├── GenrePanel.java
+│   ├── CharacterPanel.java
+│   ├── WorldPanel.java
+│   ├── ControlsPanel.java
+│   ├── StoryPanel.java
+│   ├── ChoicePanel.java
+│   ├── LibraryPanel.java
+│   └── components/
+│       ├── LoadingIndicator.java
+│       └── ErrorDialog.java
 │
 └── service/ // Controller & AI Engineer
-  ├── OpenAIClient.java // Singleton
-  ├── OpenAIService.java
-  ├── PromptBuilder.java
-  ├── LibraryStorage.java
-  ├── ExportService.java
-  └── ImageGenService.java // OPTIONAL
+    ├── OpenAIClient.java // Singleton
+    ├── OpenAIService.java
+    ├── PromptBuilder.java
+    ├── LibraryStorage.java
+    ├── ExportService.java
+    └── ImageGenService.java // OPTIONAL
 
 ```
 
