@@ -3,6 +3,25 @@
 ## Overview
 The AI Story Generator turns narrative storytelling into a personalized adventure. Build a character, shape a world, choose your genre, and watch your story adapt dynamically to the decisions you make. Whether it becomes a whimsical fantasy quest or a suspenseful mystery thriller, your path is never the same twice. When your journey is complete, save and favorite your story, organize it in your personal library, and export it to share with others.
 
+## Setup
+- **Clone the repository**
+```bash
+git clone <repo-url>
+```
+- **Open the project** in IntelliJ (or your preferred Java IDE).
+- **Verify Java 17+** is installed on your system.
+- **(Optional) Add your OpenAI API key** to the environment or config file to enable AI text generation.
+
+
+## Team Members
+
+| Name | Role | Responsibilities |
+|------|------|----------------|
+| **Rebecca Smith** | Model & Story System Engineer | Story data structures, world/character models, genre strategy logic |
+| **Viet Nguyen** | UI/UX Developer | Panels, layout flow, rendering of scenes and choices |
+| **Tanya Patel** | Controller & AI Integration | OpenAI prompt building, save/load system, exporting |
+
+
 ## Example Story Flow
 
 | Step | Action |
@@ -26,7 +45,6 @@ The AI Story Generator turns narrative storytelling into a personalized adventur
 - Optional: Let AI generate matching illustrations
 
 
-
 ## Design Patterns
 
 | Pattern | Role in Project |
@@ -35,16 +53,6 @@ The AI Story Generator turns narrative storytelling into a personalized adventur
 | **Strategy Pattern** | Enables multiple genre writing styles without changing core logic |
 | **Factory Pattern** | Chooses the correct genre strategy at runtime |
 | **Singleton** | Ensures only one shared OpenAI client instance |
-
-
-
-## Team Members
-
-| Name | Role | Responsibilities |
-|------|------|----------------|
-| **Rebecca Smith** | Model & Story System Engineer | Story data structures, world/character models, genre strategy logic |
-| **Viet Nguyen** | UI/UX Developer | Panels, layout flow, rendering of scenes and choices |
-| **Tanya Patel** | Controller & AI Integration | OpenAI prompt building, save/load system, exporting |
 
 
 ## Proposed File Structure (WIP)
