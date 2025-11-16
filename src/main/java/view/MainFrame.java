@@ -1,10 +1,16 @@
 package view;
 
-import controller.IGameController;
+import controller.GameController;
 import model.story.Choice;
 import view.components.ErrorDialog;
 import view.components.LoadingIndicator;
-import view.panels.*;
+import view.panels.GenrePanel;
+import view.panels.CharacterPanel;
+import view.panels.WorldPanel;
+import view.panels.ControlsPanel;
+import view.panels.ChoicePanel;
+import view.panels.StoryPanel;
+import view.panels.LibraryPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,12 +29,9 @@ public class MainFrame extends JFrame
 
     private final CardLayout cards = new CardLayout();
     private final JPanel cardHolder = new JPanel(cards);
-
     private final StoryPanel storyPanel = new StoryPanel();
-
     private final LoadingIndicator loading = new LoadingIndicator();
-
-    private IGameController controller;
+    private GameController controller;
 
     public MainFrame() {
         super("AI Story Generator");
@@ -36,13 +39,11 @@ public class MainFrame extends JFrame
         setMinimumSize(new Dimension(1000, 700));
         setLocationRelativeTo(null);
 
-        // UI skeleton
         setLayout(new BorderLayout());
         add(buildToolbar(), BorderLayout.NORTH);
         add(cardHolder, BorderLayout.CENTER);
         add(buildStatusBar(), BorderLayout.SOUTH);
 
-        // cards
         GenrePanel genrePanel = new GenrePanel(this);
         cardHolder.add(genrePanel, GENRE);
         CharacterPanel characterPanel = new CharacterPanel(this);
@@ -60,7 +61,7 @@ public class MainFrame extends JFrame
         pack();
     }
 
-    public void setController(IGameController controller) {
+    public void setController(GameController controller) {
         this.controller = controller;
     }
 
@@ -81,10 +82,11 @@ public class MainFrame extends JFrame
             if (controller != null) controller.saveCurrentStory();
         });
         help.addActionListener(e -> JOptionPane.showMessageDialog(this,
-                "Choose a genre, create a character and world, then begin the story.\n" +
-                        "Click A/B to branch the narrative."));
+                "Choose a genre, create a character and world, then begin the story."));
 
-        tb.add(back); tb.add(library); tb.add(save);
+        tb.add(back);
+        tb.add(library);
+        tb.add(save);
         tb.add(Box.createHorizontalGlue());
         tb.add(help);
         return tb;
@@ -96,39 +98,58 @@ public class MainFrame extends JFrame
         return p;
     }
 
-    public void showView(String key) { cards.show(cardHolder, key); }
+    public void showView(String key) {
+        cards.show(cardHolder, key);
+    }
 
-    // ====== Story view helpers used by controller ======
-    public void showLoading(String msg) { loading.show(msg); }
-    public void hideLoading() { loading.hideIt(); }
-    public void showError(String title, Exception ex) { ErrorDialog.show(this, title, ex); }
-    public void showStory(String text) { storyPanel.setStoryText(text); }
-    public void setChoices(Choice a, Choice b) { storyPanel.setChoices(a, b, this); }
+    public void showLoading(String msg) {
+        loading.show(msg);
+    }
 
-    // ====== Panel listeners -> controller ======
-    @Override public void onGenreChosen(String genreKey) {
+    public void hideLoading() {
+        loading.hideIt();
+    }
+
+    public void showError(String title, Exception ex) {
+        ErrorDialog.show(this, title, ex);
+    }
+
+    public void showStory(String text) {
+        storyPanel.setStoryText(text);
+    }
+
+    public void setChoices(Choice a, Choice b) {
+        storyPanel.setChoices(a, b, this);
+    }
+
+    @Override
+    public void onGenreChosen(String genreKey) {
         if (controller != null) controller.onGenreSelected(genreKey);
         showView(CHARACTER);
     }
 
-    @Override public void onCharacterContinue(String name, List<String> traits, String backstory) {
+    @Override
+    public void onCharacterContinue(String name, List<String> traits, String backstory) {
         if (controller != null) controller.onCharacterEntered(name, traits, backstory);
         showView(WORLD);
     }
 
-    @Override public void onWorldContinue(String location, String rule, String history) {
+    @Override
+    public void onWorldContinue(String location, String rule, String history) {
         if (controller != null) controller.onWorldEntered(location, rule, history);
         showView(CONTROLS);
     }
 
-    @Override public void onControlsBegin(String length, String complexity, String style) {
+    @Override
+    public void onControlsBegin(String length, String complexity, String style) {
         if (controller != null) {
             controller.onControlsSelected(length, complexity, style);
             controller.startGame();
         }
     }
 
-    @Override public void onChoiceSelected(String id) {
+    @Override
+    public void onChoiceSelected(String id) {
         if (controller != null) controller.applyChoice(id);
     }
 }

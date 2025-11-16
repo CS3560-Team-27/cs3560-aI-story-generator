@@ -8,7 +8,7 @@ import java.awt.*;
 public class StoryPanel extends JPanel {
 
     private final JTextArea storyArea = new JTextArea(16, 80);
-    private final ChoicePanel choices;
+    private ChoicePanel choices;
 
     public StoryPanel() {
         setLayout(new BorderLayout(8,8));
@@ -27,10 +27,10 @@ public class StoryPanel extends JPanel {
     }
 
     public void setChoices(Choice a, Choice b, ChoicePanel.Listener listener) {
-        ChoicePanel newChoices = new ChoicePanel(listener);
-        newChoices.setChoices(a, b);
         remove(choices);
-        add(newChoices, BorderLayout.SOUTH);
+        choices = new ChoicePanel(listener);
+        choices.setChoices(a, b);
+        add(choices, BorderLayout.SOUTH);
         revalidate();
         repaint();
     }
