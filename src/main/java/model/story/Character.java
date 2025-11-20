@@ -7,25 +7,20 @@ public class Character {
     private List<String> traits;
     private String backstory;
 
-    // Constructor: name only
-    public Character(String name) {
-        this.name = name;
-        this.traits = new ArrayList<String>(); // empty list by default
-        this.backstory = "Unknown";
-    }
-
-    // Constructor: name + traits
-    public Character(String name, List<String> traits) {
-        this.name = name;
-        this.traits = traits;
-        this.backstory = "Unknown";
-    }
-
-    // Constructor: name + traits + backstory
+    // Main constructor - uses defaults for missing values
     public Character(String name, List<String> traits, String backstory) {
-        this.name = name;
-        this.traits = traits;
-        this.backstory = backstory;
+        this.name = name != null ? name : "";
+        this.traits = traits != null ? traits : new ArrayList<>();
+        this.backstory = backstory != null ? backstory : "Unknown";
+    }
+
+    // Convenience constructors delegate to main constructor
+    public Character(String name) {
+        this(name, null, null);
+    }
+
+    public Character(String name, List<String> traits) {
+        this(name, traits, null);
     }
 
     // Getters + Setters

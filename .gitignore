@@ -26,7 +26,7 @@ Thumbs.db
 
 # === API Key / Config Files ===
 # IMPORTANT: do NOT commit real API key files
-config.properties
+/src/main/resources/config.properties
 *.env
 .env.local
 .env.*
@@ -38,3 +38,4 @@ config.properties.example
 /saves/
 /exported_stories/
 /library.json
+

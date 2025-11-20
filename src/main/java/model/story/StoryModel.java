@@ -35,7 +35,7 @@ public class StoryModel {
     // Scenes
     public void addScene(Scene scene) {
         scenes.add(scene);
-        state.nextChapter(); // Each scene progression increases chapter count
+        // Chapter advancement is handled by the controller, not here
     }
 
     public Scene getCurrentScene() {

@@ -5,27 +5,20 @@ public class World {
     private String rule;
     private String history;
 
-    // Constructor: location only
-    public World(String location) {
-        this.location = location;
-        this.rule = "No rules";
-        // dummy default text
-        this.history = "An ancient war scarred the land";
-    }
-
-    // Constructor: location + rule
-    public World(String location, String rule) {
-        this.location = location;
-        this.rule = rule;
-        // dummy default text
-        this.history = "An ancient war scarred the land";
-    }
-
-    // Constructor: full world details
+    // Main constructor - uses defaults for missing values
     public World(String location, String rule, String history) {
-        this.location = location;
-        this.rule = rule;
-        this.history = history;
+        this.location = location != null ? location : "";
+        this.rule = rule != null ? rule : "No rules";
+        this.history = history != null ? history : "An ancient war scarred the land";
+    }
+
+    // Convenience constructors delegate to main constructor
+    public World(String location) {
+        this(location, null, null);
+    }
+
+    public World(String location, String rule) {
+        this(location, rule, null);
     }
 
     // Getters + Setters
