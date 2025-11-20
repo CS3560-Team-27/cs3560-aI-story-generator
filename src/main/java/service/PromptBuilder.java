@@ -6,14 +6,10 @@ import model.story.Scene;
 import model.story.Choice;
 import model.story.StoryState;
 
-/**
- * PromptBuilder - Creates prompts for AI story generation
- */
+// PromptBuilder - Creates prompts for AI story generation
 public class PromptBuilder {
 
-    /**
-     * Creates a prompt for the story's opening scene with choices
-     */
+    // Creates a prompt for the story's opening scene with choices
     public static String introWithChoices(Character c, World w,
                                String genre, String length, String complexity, String style) {
         String traits = String.join(", ", c.getTraits() == null ? java.util.List.of() : c.getTraits());
@@ -33,9 +29,7 @@ public class PromptBuilder {
                 + "Remember: Always provide exactly two distinct choices labeled CHOICE_A and CHOICE_B.";
     }
 
-    /**
-     * Creates a prompt for continuing the story with new choices based on player choice
-     */
+    // Creates a prompt for continuing the story with new choices based on player choice
     public static String nextWithChoices(Scene previous, Choice chosen, String genre, String length, String complexity, String style, StoryState state) {
         return "Continue the " + genre + " interactive story.\n"
                 + "Previous scene: " + nz(previous.getSceneText()) + "\n"

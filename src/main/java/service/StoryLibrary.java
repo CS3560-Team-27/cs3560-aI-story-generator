@@ -15,9 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * StoryLibrary - Handles saving and loading stories to/from the filesystem
- */
+// StoryLibrary - Handles saving and loading stories to/from the filesystem
 public class StoryLibrary {
     private static final String SAVE_DIRECTORY = "saves";
     private static StoryLibrary instance;
@@ -39,9 +37,7 @@ public class StoryLibrary {
         return instance;
     }
 
-    /**
-     * Initialize the library by creating directories and loading existing stories
-     */
+    // Initialize the library by creating directories and loading existing stories
     private void initializeLibrary() {
         try {
             // Create save directory if it doesn't exist
@@ -58,9 +54,7 @@ public class StoryLibrary {
         }
     }
 
-    /**
-     * Save a story to the library
-     */
+    // Save a story to the library
     public SavedStory saveStory(StoryModel model, String genre, String title, 
                                String length, String complexity, String style) throws IOException {
         
@@ -100,16 +94,12 @@ public class StoryLibrary {
         }
     }
 
-    /**
-     * Load all saved stories
-     */
+    // Load all saved stories
     public List<SavedStory> getAllSavedStories() {
         return new ArrayList<>(savedStories);
     }
 
-    /**
-     * Load a specific story by ID
-     */
+    // Load a specific story by ID
     public SavedStory loadStory(String storyId) throws IOException {
         String fileName = storyId + ".txt";
         Path storyFile = saveDir.resolve(fileName);
@@ -126,9 +116,7 @@ public class StoryLibrary {
         }
     }
 
-    /**
-     * Delete a story from the library
-     */
+    // Delete a story from the library
     public boolean deleteStory(String storyId) {
         try {
             String fileName = storyId + ".txt";
@@ -153,9 +141,7 @@ public class StoryLibrary {
 
     // ==================== Private Methods ====================
 
-    /**
-     * Save story to file in simple text format
-     */
+    // Save story to file in simple text format
     private void saveStoryToFile(SavedStory story, Path filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(filePath))) {
             writer.println("=== STORY METADATA ===");
@@ -176,8 +162,8 @@ public class StoryLibrary {
     private void writeCharacter(PrintWriter writer, Character c) {
         writer.println("\n=== CHARACTER ===");
         if (c != null) {
-            writer.println("NAME: " + nullSafe(c.getName()));
-            writer.println("BACKSTORY: " + nullSafe(c.getBackstory()));
+            writer.println("NAME: " + (c.getName() != null ? c.getName() : ""));
+            writer.println("BACKSTORY: " + (c.getBackstory() != null ? c.getBackstory() : ""));
             writer.println("TRAITS: " + (c.getTraits() != null ? String.join(",", c.getTraits()) : ""));
         }
     }
@@ -185,9 +171,9 @@ public class StoryLibrary {
     private void writeWorld(PrintWriter writer, World w) {
         writer.println("\n=== WORLD ===");
         if (w != null) {
-            writer.println("LOCATION: " + nullSafe(w.getLocation()));
-            writer.println("RULE: " + nullSafe(w.getRule()));
-            writer.println("HISTORY: " + nullSafe(w.getHistory()));
+            writer.println("LOCATION: " + (w.getLocation() != null ? w.getLocation() : ""));
+            writer.println("RULE: " + (w.getRule() != null ? w.getRule() : ""));
+            writer.println("HISTORY: " + (w.getHistory() != null ? w.getHistory() : ""));
         }
     }
     
@@ -212,9 +198,7 @@ public class StoryLibrary {
         return value != null ? value : "";
     }
 
-    /**
-     * Load story from file
-     */
+    // Load story from file
     private SavedStory loadStoryFromFile(Path filePath) throws IOException {
         SavedStory story = new SavedStory();
         Character character = new Character("");
@@ -332,9 +316,7 @@ public class StoryLibrary {
         }
     }
 
-    /**
-     * Load the library index (simplified version)
-     */
+    // Load the library index (simplified version)
     private void loadLibraryIndex() {
         try {
             if (Files.exists(saveDir)) {
@@ -356,9 +338,7 @@ public class StoryLibrary {
         }
     }
 
-    /**
-     * Save the library index (simplified - just for logging)
-     */
+    // Save the library index (simplified - just for logging)
     private void saveLibraryIndex() {
         System.out.println("[Library] Library now contains " + savedStories.size() + " stories");
     }

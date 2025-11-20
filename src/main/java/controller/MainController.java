@@ -15,11 +15,9 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * GameController - Main controller that connects UI, story model, and AI service
- * Handles user interactions and manages the story generation workflow
- */
-public class GameController {
+//Main controller that connects UI, story model, and AI service
+
+public class MainController {
 
     private final MainFrame view;
     private final StoryModel model = new StoryModel();
@@ -31,7 +29,7 @@ public class GameController {
     private String complexity = "Adult";
     private String style = "Descriptive";
 
-    public GameController(MainFrame view) {
+    public MainController(MainFrame view) {
         this.view = view;
     }
 

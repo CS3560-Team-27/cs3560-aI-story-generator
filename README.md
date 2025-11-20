@@ -1,119 +1,64 @@
-# AI Story Generator — Choose Your Own Adventure  
-
-## Overview
-The AI Story Generator turns narrative storytelling into a personalized adventure. Build a character, shape a world, choose your genre, and watch your story adapt dynamically to the decisions you make. Whether it becomes a whimsical fantasy quest or a suspenseful mystery thriller, your path is never the same twice. When your journey is complete, save and favorite your story, organize it in your personal library, and export it to share with others.
+# AI Story Generator — Choose Your Own Adventure
 
 ## Setup
-- **Clone the repository**
-```bash
-git clone <repo-url>
-```
-- **Open the project** in IntelliJ (or your preferred Java IDE).
-- **Verify Java 17+** is installed on your system.
-- **(Optional) Add your OpenAI API key** to the environment or config file to enable AI text generation.
-
-
-## Team Members
-
-| Name | Role | Responsibilities |
-|------|------|----------------|
-| **Rebecca Smith** | Model & Story System Engineer | Story data structures, world/character models, genre strategy logic |
-| **Viet Nguyen** | UI/UX Developer | Panels, layout flow, rendering of scenes and choices |
-| **Tanya Patel** | Controller & AI Integration | OpenAI prompt building, save/load system, exporting |
-
-
-## Example Story Flow
-
-| Step | Action |
-|------|--------|
-| Genre Selection | **Fantasy** → Start |
-| Character | Elowen — Brave, Curious — Exiled princess |
-| World | Whispering Forest — Magic forbidden — War-torn history |
-| Story Start | Narrative text is generated |
-| Player Choice | **A)** Follow trail • **B)** Call out |
-
-> Each choice redirects the story into a new scene.
-
+1. Get API key from [OpenAI](https://platform.openai.com/api-keys)
+2. Set environment variable: `export OPENAI_API_KEY="your-key-here"`
+3. Or add to `src/main/resources/config.properties`: `OPENAI_API_KEY=your-key-here`
+4. Run `Main.java` to launch the application
 
 ## Features
-- Build your own hero and world
-- Pick a genre to set the mood (Fantasy, Sci-Fi, Mystery, Romance, Horror)
-- Shape the story through impactful decisions
-- Customize how long, deep, or descriptive the story should feel
-- Save your adventures to a personal Story Library
-- Export stories to share or keep forever
-- Optional: Let AI generate matching illustrations
-
+- [x] Interactive character creation with traits and backstory
+- [x] Dynamic world building with custom locations and rules
+- [x] Multiple genre support (Fantasy, Sci-Fi, Mystery, Romance, Horror)
+- [x] AI-powered story generation with branching choices
+- [x] Save/load story sessions to personal library
+- [x] Robust error handling and AI response parsing
+- [x] Story export functionality
+- [x] Customizable story length, style, and complexity
 
 ## Design Patterns
+- **MVC**: Separates UI (Swing panels), controller logic, and data models
+- **Singleton**: OpenAI client instance shared across all API calls
+- **Builder**: PromptBuilder constructs AI prompts from story context
+- **Strategy**: Different story generation approaches based on genre/style
+- **Observer**: UI components update automatically when story state changes
 
-| Pattern | Role in Project |
-|--------|-----------------|
-| **MVC** | Separates UI, logic, and data for maintainability |
-| **Strategy Pattern** | Enables multiple genre writing styles without changing core logic |
-| **Factory Pattern** | Chooses the correct genre strategy at runtime |
-| **Singleton** | Ensures only one shared OpenAI client instance |
-
-
-## Proposed File Structure (WIP)
+## Architecture
 ```
 src/main/java/
-├── Main.java
-│
-├── model/ // Story & Model Engineer
-│   ├── story/
-│   │   ├── Scene.java
-│   │   ├── Choice.java
-│   │   ├── StoryState.java
-│   │   ├── StoryModel.java
-│   │   ├── Character.java
-│   │   └── World.java
-│   │
-│   ├── strategy/
-│   │   ├── AIStrategy.java
-│   │   ├── FantasyStrategy.java
-│   │   ├── SciFiStrategy.java
-│   │   ├── MysteryStrategy.java
-│   │   ├── RomanceStrategy.java
-│   │   ├── HorrorStrategy.java
-│   │   └── StrategyFactory.java
-│   │
-│   └── library/
-│       ├── StoryRecord.java
-│       └── LibraryModel.java
-│
-├── controller/ // Controller & AI Engineer
-│   ├── IGameController.java
-│   ├── GameController.java
-│   ├── CharacterController.java
-│   ├── WorldController.java
-│   └── LibraryController.java
-│
-├── view/ // UI/UX Engineer
-│   ├── MainFrame.java
-│   ├── GenrePanel.java
-│   ├── CharacterPanel.java
-│   ├── WorldPanel.java
-│   ├── ControlsPanel.java
-│   ├── StoryPanel.java
-│   ├── ChoicePanel.java
-│   ├── LibraryPanel.java
-│   └── components/
-│       ├── LoadingIndicator.java
-│       └── ErrorDialog.java
-│
-└── service/ // Controller & AI Engineer
-    ├── OpenAIClient.java // Singleton
-    ├── OpenAIService.java
-    ├── PromptBuilder.java
-    ├── LibraryStorage.java
-    ├── ExportService.java
-    └── ImageGenService.java // OPTIONAL
-
+├── Main.java                          # Application entry point
+├── controller/
+│   └── MainController.java           # Main controller connecting UI to services
+├── model/
+│   ├── OpenAIClient.java              # HTTP client singleton for OpenAI API
+│   └── story/
+│       ├── Character.java             # Player character with traits
+│       ├── World.java                 # Story world with rules and history  
+│       ├── Scene.java                 # Individual story scenes
+│       ├── Choice.java                # Player choice options (A/B)
+│       ├── StoryModel.java            # Complete story state
+│       ├── StoryState.java            # Current position in story
+│       └── SavedStory.java            # Serializable story for persistence
+├── service/
+│   ├── OpenAIService.java             # Story generation with AI
+│   ├── PromptBuilder.java             # Constructs prompts for AI
+│   └── StoryLibrary.java              # Save/load story persistence
+└── view/
+    ├── MainFrame.java                 # Main application window
+    ├── components/
+    │   ├── ErrorDialog.java           # Error message display
+    │   └── LoadingIndicator.java      # Loading spinner
+    └── panels/
+        ├── CharacterPanel.java        # Character creation UI
+        ├── ChoicePanel.java           # Choice selection buttons
+        ├── ControlsPanel.java         # Story settings and controls
+        ├── GenrePanel.java            # Genre selection
+        ├── LibraryPanel.java          # Saved stories browser
+        ├── StoryPanel.java            # Story text display
+        └── WorldPanel.java            # World building UI
 ```
 
-## Next Steps
-- Integrate OpenAI text generation for dynamic storytelling
-- Add progress indicator UI
+## Demo
+[Video demonstration coming soon]
 
 

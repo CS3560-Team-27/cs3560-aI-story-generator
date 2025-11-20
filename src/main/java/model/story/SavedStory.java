@@ -5,9 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * SavedStory - Represents a complete story that has been saved to the library
- */
+// Represents a complete story that has been saved to the library
 public class SavedStory {
     private String id;
     private String title;
@@ -143,9 +141,7 @@ public class SavedStory {
         return firstScene;
     }
 
-    /**
-     * Generate a default title based on character and world if no title is set
-     */
+    // Generate a default title based on character and world if no title is set
     public String getDisplayTitle() {
         if (title != null && !title.trim().isEmpty()) {
             return title;

@@ -1,6 +1,6 @@
 import javax.swing.SwingUtilities;
 import view.MainFrame;
-import controller.GameController;
+import controller.MainController;
 
 /**
  * Main entry point for the AI Story Generator application
@@ -11,7 +11,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             // Create main window and controller
             MainFrame frame = new MainFrame();
-            GameController controller = new GameController(frame);
+            MainController controller = new MainController(frame);
             
             // Connect controller to UI and display
             frame.setController(controller);

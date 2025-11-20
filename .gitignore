@@ -31,11 +31,11 @@ Thumbs.db
 .env.local
 .env.*
 
-# Keep example template (safe to commit)
-config.properties.example
-
-# === Save Files (Person C may create these later) ===
+# === Save Files ===
 /saves/
-/exported_stories/
-/library.json
+
+# === Instruction Files ===
+.github/instructions/
+*instructions.md
+copilot-instructions.md*
 

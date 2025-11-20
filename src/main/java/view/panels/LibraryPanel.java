@@ -8,9 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-/**
- * LibraryPanel - Shows saved stories and allows viewing/managing them
- */
+// LibraryPanel - Shows saved stories and allows viewing/managing them
 public class LibraryPanel extends JPanel {
     
     private final DefaultListModel<SavedStory> listModel;
@@ -61,6 +59,7 @@ public class LibraryPanel extends JPanel {
         
         // Add refresh and delete buttons
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        
         JButton refreshButton = new JButton("Refresh");
         JButton deleteButton = new JButton("Delete");
         JButton exportButton = new JButton("Export");
@@ -221,9 +220,7 @@ public class LibraryPanel extends JPanel {
         }
     }
     
-    /**
-     * Custom renderer for the story list
-     */
+    // Custom renderer for the story list
     private static class StoryListRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

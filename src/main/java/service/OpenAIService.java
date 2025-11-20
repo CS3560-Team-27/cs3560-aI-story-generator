@@ -3,11 +3,9 @@ package service;
 import java.net.http.HttpResponse;
 import model.story.Scene;
 import model.story.Choice;
+import model.OpenAIClient;
 
-/**
- * OpenAIService - Handles communication with OpenAI's API
- * Generates story text using the Chat Completions endpoint
- */
+// communication with OpenAI's API, Generates story text using the Chat Completions endpoint
 public class OpenAIService {
     private static final String CHAT_URL = "https://api.openai.com/v1/chat/completions";
     private final String model;
@@ -91,11 +89,6 @@ public class OpenAIService {
         String choiceAText = "Continue";
         String choiceBText = "Try something else";
         
-        System.out.println("[OpenAI] Raw AI Response:");
-        System.out.println("=== START RESPONSE ===");
-        System.out.println(aiResponse);
-        System.out.println("=== END RESPONSE ===");
-        
         try {
             // Extract scene text and choices using more robust parsing
             String[] sections = extractSections(aiResponse);
@@ -106,7 +99,6 @@ public class OpenAIService {
             // Validate that we have meaningful content
             if (sceneText.isEmpty() || sceneText.length() < 20) {
                 sceneText = aiResponse;
-                System.out.println("[OpenAI] Using full response as scene text");
             }
             
             // Ensure we always have two distinct choices
@@ -128,8 +120,6 @@ public class OpenAIService {
             choiceAText = generateFallbackChoiceA(sceneText);
             choiceBText = generateFallbackChoiceB(sceneText);
         }
-        
-        System.out.println("[OpenAI] Final choices: A='" + choiceAText + "', B='" + choiceBText + "'");
         
         Choice choiceA = new Choice("A", choiceAText);
         Choice choiceB = new Choice("B", choiceBText);

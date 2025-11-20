@@ -21,12 +21,14 @@ public class CharacterPanel extends JPanel {
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.insets = new Insets(6,6,6,6);
-        gc.gridx=0; gc.gridy=0; gc.anchor = GridBagConstraints.EAST;
-
+        
+        // Name field
+        gc.gridx=0; gc.gridy=0; gc.anchor=GridBagConstraints.EAST;
         add(new JLabel("Name:"), gc);
-        gc.gridx=1; gc.anchor = GridBagConstraints.WEST;
+        gc.gridx=1; gc.anchor=GridBagConstraints.WEST;
         add(nameField, gc);
 
+        // Traits
         gc.gridy++; gc.gridx=0; gc.anchor=GridBagConstraints.NORTHEAST;
         add(new JLabel("Traits:"), gc);
         JPanel traitsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
@@ -34,27 +36,31 @@ public class CharacterPanel extends JPanel {
         gc.gridx=1; gc.anchor=GridBagConstraints.WEST;
         add(traitsPanel, gc);
 
+        // Backstory
         gc.gridy++; gc.gridx=0; gc.anchor=GridBagConstraints.NORTHEAST;
         add(new JLabel("Backstory:"), gc);
-        gc.gridx=1; gc.anchor=GridBagConstraints.WEST;
         backstoryArea.setLineWrap(true); backstoryArea.setWrapStyleWord(true);
+        gc.gridx=1; gc.anchor=GridBagConstraints.WEST;
         add(new JScrollPane(backstoryArea), gc);
 
+        // Button
         gc.gridy++; gc.gridx=1; gc.anchor=GridBagConstraints.EAST;
         JButton next = new JButton("Save & Continue");
-        next.addActionListener(e -> {
-            String name = nameField.getText().trim();
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter a name.");
-                return;
-            }
-            List<String> traits = new ArrayList<>();
-            if (brave.isSelected()) traits.add("Brave");
-            if (curious.isSelected()) traits.add("Curious");
-            if (clever.isSelected()) traits.add("Clever");
-            String back = backstoryArea.getText().trim();
-            listener.onCharacterContinue(name, traits, back);
-        });
+        next.addActionListener(e -> handleSubmit(listener));
         add(next, gc);
+    }
+    
+    private void handleSubmit(Listener listener) {
+        String name = nameField.getText().trim();
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a name.");
+            return;
+        }
+        List<String> traits = new ArrayList<>();
+        if (brave.isSelected()) traits.add("Brave");
+        if (curious.isSelected()) traits.add("Curious");
+        if (clever.isSelected()) traits.add("Clever");
+        String back = backstoryArea.getText().trim();
+        listener.onCharacterContinue(name, traits, back);
     }
 }

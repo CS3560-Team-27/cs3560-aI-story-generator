@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameController;
+import controller.MainController;
 import model.story.Choice;
 import view.components.ErrorDialog;
 import view.components.LoadingIndicator;
@@ -31,7 +31,7 @@ public class MainFrame extends JFrame
     private final JPanel cardHolder = new JPanel(cards);
     private final StoryPanel storyPanel = new StoryPanel();
     private final LoadingIndicator loading = new LoadingIndicator();
-    private GameController controller;
+    private MainController controller;
 
     public MainFrame() {
         super("AI Story Generator");
@@ -61,7 +61,7 @@ public class MainFrame extends JFrame
         pack();
     }
 
-    public void setController(GameController controller) {
+    public void setController(MainController controller) {
         this.controller = controller;
     }
 
