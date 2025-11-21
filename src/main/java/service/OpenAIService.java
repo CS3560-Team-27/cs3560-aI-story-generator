@@ -9,6 +9,8 @@ import model.OpenAIClient;
 public class OpenAIService {
     private static final String CHAT_URL = "https://api.openai.com/v1/chat/completions";
     private final String model;
+    private static long lastRequestTime = 0;
+
 
     public OpenAIService() {
         String env = System.getenv("OPENAI_TEXT_MODEL");
@@ -21,47 +23,36 @@ public class OpenAIService {
      * @return Scene object with AI-generated text and choices
      */
     public Scene generateSceneWithChoices(String prompt) throws Exception {
-        String response = null;
-        Exception lastException = null;
-        
-        // Retry up to 3 times if we get no response
-        for (int attempt = 1; attempt <= 3; attempt++) {
+        int maxRetries = 5;
+        long backoff = 1000; // start: 1 sec
+        Exception last = null;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                System.out.println("[OpenAI] Attempt " + attempt + " to generate scene with choices");
-                response = tryChat(prompt);
-                
+                System.out.println("[OpenAI] Attempt " + attempt);
+
+                String response = tryChat(prompt);
                 if (response != null && !response.isBlank()) {
-                    System.out.println("[OpenAI] Got response on attempt " + attempt);
-                    break; // Success!
-                } else {
-                    System.out.println("[OpenAI] Empty response on attempt " + attempt);
-                    if (attempt < 3) {
-                        Thread.sleep(1000); // Wait 1 second before retry
-                    }
+                    return parseSceneAndChoices(response);
                 }
             } catch (Exception e) {
-                lastException = e;
-                System.err.println("[OpenAI] Error on attempt " + attempt + ": " + e.getMessage());
-                if (attempt < 3) {
-                    try {
-                        Thread.sleep(1000); // Wait 1 second before retry
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                        throw new Exception("Interrupted during retry", ie);
-                    }
-                }
+                last = e;
+                System.err.println("[OpenAI] Error: " + e.getMessage());
+            }
+
+            // exponential backoff
+            if (attempt < maxRetries) {
+                System.out.println("[OpenAI] Waiting " + backoff + "ms before retry...");
+                Thread.sleep(backoff);
+                backoff *= 2;  // 1s → 2s → 4s → 8s → 16s
             }
         }
-        
-        if (response == null || response.isBlank()) {
-            System.err.println("[OpenAI] Failed to get response after 3 attempts, creating fallback scene");
-            // Create a meaningful fallback scene instead of just returning error text
-            return createFallbackScene(lastException);
-        }
-        
-        return parseSceneAndChoices(response);
+
+        System.err.println("[OpenAI] Giving up after retries.");
+        return createFallbackScene(last);
     }
-    
+
+
     //Creates a fallback scene when AI fails to respond
     private Scene createFallbackScene(Exception error) {
         String fallbackText = "The story continues as you find yourself at a crossroads. " +
@@ -250,7 +241,6 @@ public class OpenAIService {
         HttpResponse<String> res = OpenAIClient.getInstance().postJson(CHAT_URL, payload);
         
         if (res.statusCode() == 429) {
-            Thread.sleep(2000); // Rate limit - wait and retry
             throw new Exception("Rate limit exceeded, will retry");
         }
         
