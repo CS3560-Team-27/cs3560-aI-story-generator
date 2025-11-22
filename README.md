@@ -59,6 +59,6 @@ src/main/java/
 ```
 
 ## Demo
-[Video demonstration coming soon]
+[[Video demonstration](https://www.youtube.com/watch?v=u6xPhQpRZ9Y)]
 
 
