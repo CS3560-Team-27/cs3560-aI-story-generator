@@ -3,6 +3,10 @@ package model.story;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.awt.Image;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * StoryModel
@@ -34,6 +38,8 @@ public class StoryModel {
 
     /** The current active scene */
     private SceneModel currentScene;
+    /** Cached scene illustrations by chapter number */
+    private final Map<Integer, Image> sceneImageCache = new HashMap<>();
 
 
     /* ==========================================================
@@ -93,6 +99,23 @@ public class StoryModel {
         }
     }
 
+    /* ==========================================================
+       IMAGE CACHING (RATE-LIMIT SAFE)
+       ========================================================== */
+
+    public Image getCachedImage(int chapter) {
+        return sceneImageCache.get(chapter);
+    }
+
+    public void cacheImage(int chapter, Image image) {
+        if (image != null) {
+            sceneImageCache.put(chapter, image);
+        }
+    }
+
+    public void clearImageCache() {
+        sceneImageCache.clear();
+    }
 
     /* ==========================================================
        LOADING SAVED GAMES
@@ -154,6 +177,8 @@ public class StoryModel {
     public void reset() {
         scenes.clear();
         currentScene = null;
+        sceneImageCache.clear(); // NEW
         state.reset();
     }
+
 }

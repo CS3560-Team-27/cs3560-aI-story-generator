@@ -14,6 +14,10 @@ import java.util.List;
  * MainFrame
  *
  * The main window that holds all screens and routes UI events to MainController.
+ *
+ * Updated to support:
+ *   • StoryPanel with left-side AI illustration panel
+ *   • Automatic image updates from MainController
  */
 public class MainFrame extends JFrame
         implements GenrePanel.Listener,
@@ -42,7 +46,7 @@ public class MainFrame extends JFrame
 
         super("AI Story Generator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1000, 700));
+        setMinimumSize(new Dimension(1200, 750));
         setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
@@ -50,6 +54,9 @@ public class MainFrame extends JFrame
         add(cardHolder, BorderLayout.CENTER);
         add(buildStatusBar(), BorderLayout.SOUTH);
 
+        /* -----------------------------------------------------------
+           Build all initial screens
+           ----------------------------------------------------------- */
         GenrePanel genrePanel = new GenrePanel(this);
         CharacterPanel characterPanel = new CharacterPanel(this);
         WorldPanel worldPanel = new WorldPanel(this);
@@ -63,12 +70,14 @@ public class MainFrame extends JFrame
         cardHolder.add(worldPanel, WORLD);
         cardHolder.add(controlsPanel, CONTROLS);
 
-        // Build story view (story text + vertical choices)
+        /* -----------------------------------------------------------
+           STORY VIEW: storyPanel (text + image) + choices on bottom
+           ----------------------------------------------------------- */
         JPanel storyView = new JPanel(new BorderLayout());
         storyView.add(storyPanel, BorderLayout.CENTER);
         storyView.add(choicePanel, BorderLayout.SOUTH);
 
-        // wire buttons
+        /* Wire choice buttons to controller */
         choicePanel.setChoiceCallback(id -> {
             if (controller != null) controller.applyChoice(id);
         });
@@ -76,12 +85,16 @@ public class MainFrame extends JFrame
         cardHolder.add(storyView, STORY);
         cardHolder.add(libraryPanel, LIBRARY);
 
+        /* glass-pane loading overlay */
         setGlassPane(loading);
+
         showView(GENRE);
         pack();
     }
 
-    /* Controller linking */
+    /* -----------------------------------------------------------
+       Controller linking
+       ----------------------------------------------------------- */
     public void setController(MainController controller) {
         this.controller = controller;
     }
@@ -90,17 +103,33 @@ public class MainFrame extends JFrame
         return controller;
     }
 
-    /* Show scene + update choices */
+    /* -----------------------------------------------------------
+       Scene updates (Story + Image)
+       ----------------------------------------------------------- */
     public void showScene(SceneModel scene) {
+
+        /* show formatted text */
         storyPanel.showScene(scene);
-        choicePanel.setChoices(scene); // NEW — updates vertical buttons
+
+        /* set A/B/C labels in ChoicePanel */
+        choicePanel.setChoices(scene);
+
+        /* also allow MainController to replace the image */
+        // (Controller will call storyPanel.getImagePanel().setImage(...))
+    }
+
+    /** Expose image panel to controller */
+    public StoryPanel getStoryPanel() {
+        return storyPanel;
     }
 
     public ChoicePanel getChoicePanel() {
         return choicePanel;
     }
 
-    /* Toolbar + status */
+    /* -----------------------------------------------------------
+       Toolbar + status bar
+       ----------------------------------------------------------- */
     private JToolBar buildToolbar() {
         JToolBar tb = new JToolBar();
         tb.setFloatable(false);
@@ -133,14 +162,17 @@ public class MainFrame extends JFrame
         return p;
     }
 
+    /* Loading/error UI helpers */
     public void showLoading(String msg) { loading.show(msg); }
     public void hideLoading() { loading.hideIt(); }
     public void showError(String title, Exception ex) { ErrorDialog.show(this, title, ex); }
 
-    /* Navigation */
+    /* Card navigation */
     public void showView(String key) { cards.show(cardHolder, key); }
 
-    /* Panel listeners */
+    /* -----------------------------------------------------------
+       Panel callbacks
+       ----------------------------------------------------------- */
     @Override
     public void onGenreChosen(String genreKey) {
         controller.onGenreSelected(genreKey);

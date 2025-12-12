@@ -1,5 +1,8 @@
 package model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -65,29 +68,6 @@ public class OpenAIClient {
         this.client = HttpClient.newBuilder()
                 .connectTimeout(java.time.Duration.ofSeconds(15))
                 .build();
-    }
-
-    /* ============================================================
-       TESTING CONSTRUCTOR (bypasses config file)
-       ============================================================ */
-    public OpenAIClient(String apiKey, String model) {
-        if (apiKey == null || apiKey.isBlank()) {
-            throw new RuntimeException("API key is missing for test instance");
-        }
-        this.apiKey = apiKey;
-        this.model = model;
-
-        this.client = HttpClient.newBuilder()
-                .connectTimeout(java.time.Duration.ofSeconds(15))
-                .build();
-    }
-
-    /* ============================================================
-       SINGLETON ACCESS + TEST RESET
-       ============================================================ */
-    public static synchronized OpenAIClient getInstance() {
-        if (instance == null) instance = new OpenAIClient();
-        return instance;
     }
 
     /** For unit tests ONLY — allows a clean instance */
@@ -156,6 +136,77 @@ public class OpenAIClient {
         return response.body();
     }
 
+    /* ========================================================
+       IMAGE GENERATION ENDPOINT (DALL·E / GPT-Image)
+       ======================================================== */
+    public String generateImage(String prompt) throws IOException, InterruptedException {
+
+        String safePrompt = toJsonString(prompt);
+
+        String json = """
+        {
+          "model": "gpt-image-1",
+          "prompt": %s,
+          "size": "512x512",
+          "quality": "standard"
+        }
+    """.formatted(safePrompt);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.openai.com/v1/images/generations"))
+                .timeout(java.time.Duration.ofSeconds(45))
+                .header("Authorization", "Bearer " + apiKey)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() / 100 != 2) {
+            throw new IOException("""
+            IMAGE API error: HTTP %d
+            Response:
+            %s
+        """.formatted(response.statusCode(), response.body()));
+        }
+
+        return response.body();
+    }
+
+    /* ========================================================
+       IMAGE GENERATION (DALL·E)
+       ======================================================== */
+    public String generateImageUrl(String prompt) throws Exception {
+
+        String json = """
+        {
+          "model": "gpt-image-1",
+          "prompt": %s,
+          "size": "1024x1024"
+        }
+        """.formatted(toJsonString(prompt));
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.openai.com/v1/images/generations"))
+                .header("Authorization", "Bearer " + apiKey)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() / 100 != 2) {
+            throw new IOException("Image API error: " + response.body());
+        }
+
+        // Parse URL from JSON
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(response.body());
+        return root.get("data").get(0).get("url").asText();
+    }
+
     /* ============================================================
        SAFE JSON STRING ESCAPER
        ============================================================ */
@@ -170,5 +221,28 @@ public class OpenAIClient {
                 .replace("\t", "\\t");
 
         return "\"" + escaped + "\"";
+    }
+
+    /* ============================================================
+       TESTING CONSTRUCTOR (bypasses config file)
+       ============================================================ */
+    public OpenAIClient(String apiKey, String model) {
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new RuntimeException("API key is missing for test instance");
+        }
+        this.apiKey = apiKey;
+        this.model = model;
+
+        this.client = HttpClient.newBuilder()
+                .connectTimeout(java.time.Duration.ofSeconds(15))
+                .build();
+    }
+
+    /* ============================================================
+       SINGLETON ACCESS + TEST RESET
+       ============================================================ */
+    public static synchronized OpenAIClient getInstance() {
+        if (instance == null) instance = new OpenAIClient();
+        return instance;
     }
 }

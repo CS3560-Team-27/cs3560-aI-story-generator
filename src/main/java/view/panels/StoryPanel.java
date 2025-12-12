@@ -7,49 +7,82 @@ import javax.swing.text.*;
 import java.awt.*;
 
 /**
- * StoryPanel (Upgraded Version)
+ * StoryPanel (Upgraded + Image Panel Version)
  *
  * Features:
- *  • Beautiful typography using JTextPane + StyledDocument
- *  • Automatic paragraph splitting and indentation
- *  • Adjustable line spacing for a cleaner reading experience
+ *  • Left-side ImagePanel for automatic AI illustrations
+ *  • Right-side rich text story area (visual novel style)
+ *  • StyledDocument typography with spacing + indentation
  *  • Soft fade-in animation for new scenes
- *  • Generous padding around the text
- *  • Scrollable, responsive layout
- *
- * This creates a modern "visual novel" style reading surface.
+ *  • Scrollable reading area
+ *  • Loading indicator
  */
 public class StoryPanel extends JPanel {
 
+    private final ImagePanel imagePanel = new ImagePanel();  // NEW
     private final JTextPane textPane = new JTextPane();
     private final JScrollPane scrollPane;
     private final JLabel loadingLabel;
 
     public StoryPanel() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        /* ---------- TEXT AREA (JTextPane for rich formatting) ---------- */
+        /* ============================================================
+           MAIN SPLIT LAYOUT: LEFT (IMAGE) | RIGHT (STORY)
+           ============================================================ */
+        JPanel splitPanel = new JPanel(new GridBagLayout());
+        add(splitPanel, BorderLayout.CENTER);
+
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(10, 10, 10, 10);
+        gc.fill = GridBagConstraints.BOTH;
+
+        /* ------------------------------------------------------------
+           LEFT PANEL: IMAGE
+           ------------------------------------------------------------ */
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.weightx = 0.35;    // 35% width
+        gc.weighty = 1.0;
+        imagePanel.setPreferredSize(new Dimension(350, 500));
+        splitPanel.add(imagePanel, gc);
+
+        /* ------------------------------------------------------------
+           RIGHT PANEL: STORY TEXT AREA
+           ------------------------------------------------------------ */
+        gc.gridx = 1;
+        gc.weightx = 0.65;    // 65% width
+
+        JPanel storyAreaPanel = new JPanel(new BorderLayout());
+        storyAreaPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
+
         textPane.setEditable(false);
         textPane.setFont(new Font("georgia", Font.PLAIN, 16));
-        textPane.setMargin(new Insets(20, 40, 20, 40)); // top, left, bottom, right
-        textPane.setBackground(new Color(250, 248, 245)); // soft paper-like background
+        textPane.setMargin(new Insets(20, 40, 20, 40)); // padding inside text
+        textPane.setBackground(new Color(250, 248, 245));
 
         scrollPane = new JScrollPane(textPane);
         scrollPane.setBorder(null);
-        add(scrollPane, BorderLayout.CENTER);
 
-        /* ---------- LOADING LABEL ---------- */
+        storyAreaPanel.add(scrollPane, BorderLayout.CENTER);
+        splitPanel.add(storyAreaPanel, gc);
+
+        /* ============================================================
+           LOADING LABEL (BOTTOM OF RIGHT PANEL)
+           ============================================================ */
         loadingLabel = new JLabel("Loading...", SwingConstants.CENTER);
-        loadingLabel.setVisible(false);
         loadingLabel.setFont(new Font("georgia", Font.BOLD, 18));
-        add(loadingLabel, BorderLayout.SOUTH);
+        loadingLabel.setVisible(false);
+
+        storyAreaPanel.add(loadingLabel, BorderLayout.SOUTH);
     }
 
-    /* ================================================================
-       PUBLIC API
-       ================================================================ */
+    /* ============================================================
+       PUBLIC API – Called by MainController
+       ============================================================ */
 
+    /** Updates story text and triggers fade-in animation */
     public void showScene(SceneModel scene) {
         String formatted = formatParagraphs(scene.getStoryText());
         renderText(formatted);
@@ -64,16 +97,21 @@ public class StoryPanel extends JPanel {
         loadingLabel.setVisible(loading);
     }
 
-    /* ================================================================
+    /** Allows MainController to update the image */
+    public ImagePanel getImagePanel() {
+        return imagePanel;
+    }
+
+    /* ============================================================
        TEXT RENDERING
-       ================================================================ */
+       ============================================================ */
 
     private void renderText(String text) {
         StyledDocument doc = textPane.getStyledDocument();
         doc.putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n");
 
         try {
-            doc.remove(0, doc.getLength()); // clear
+            doc.remove(0, doc.getLength());
 
             String[] paragraphs = text.split("\n\n");
 
@@ -89,43 +127,38 @@ public class StoryPanel extends JPanel {
         textPane.setCaretPosition(0);
     }
 
-    private void insertStyledParagraph(StyledDocument doc, String text) throws BadLocationException {
+    private void insertStyledParagraph(StyledDocument doc, String text)
+            throws BadLocationException {
+
         SimpleAttributeSet attrs = new SimpleAttributeSet();
 
-        // Indent first line
         StyleConstants.setFirstLineIndent(attrs, 30f);
-
-        // Line spacing
         StyleConstants.setLineSpacing(attrs, 0.2f);
-
-        // Text color
         StyleConstants.setForeground(attrs, new Color(45, 38, 32));
 
         doc.insertString(doc.getLength(), text, attrs);
     }
 
-    /* ================================================================
-       PARAGRAPH AUTO-FORMATTING
-       ================================================================ */
+    /* ============================================================
+       AUTO-PARAGRAPHING
+       ============================================================ */
 
     private String formatParagraphs(String text) {
         if (text == null) return "";
-
         text = text.trim().replace("\r", "");
 
-        // If already spaced, keep it as-is
-        if (text.contains("\n\n")) return text;
+        if (text.contains("\n\n"))
+            return text;
 
-        // Insert breaks after sentence endings
         text = text.replaceAll("\\.\\s+(?=[A-Z])", ".\n\n");
         text = text.replaceAll("([!?])\\s+(?=[A-Z])", "$1\n\n");
 
         return text;
     }
 
-    /* ================================================================
-       FADE-IN EFFECT FOR NEW SCENES
-       ================================================================ */
+    /* ============================================================
+       FADE-IN ANIMATION
+       ============================================================ */
 
     private void startFadeInAnimation() {
         textPane.setForeground(new Color(45, 38, 32, 0));
@@ -135,6 +168,7 @@ public class StoryPanel extends JPanel {
             Color c = textPane.getForeground();
             int alpha = Math.min(255, c.getAlpha() + 15);
             textPane.setForeground(new Color(45, 38, 32, alpha));
+
             if (alpha >= 255) timer.stop();
         });
 

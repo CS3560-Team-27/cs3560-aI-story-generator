@@ -1,0 +1,43 @@
+{
+  "id" : "8f151c81-89a8-42f4-be26-d0427422d937",
+  "title" : "Rebecca's Journey",
+  "genre" : "mystery",
+  "character" : {
+    "name" : "Rebecca",
+    "traits" : [ "Curious" ],
+    "backstory" : "Elara vanished on her eighteenth birthday, leaving a silver locket that mirrored one worn by a mysterious great-aunt in a decades-old photograph. Now, the discovery of her diary, with the final entry \"He knows the secret of the old lighthouse,\" suggests her disappearance is linked to a dark family secret hidden within the abandoned coastal structure."
+  },
+  "world" : {
+    "location" : "London",
+    "rule" : "",
+    "history" : "\uD83D\uDC51 The Missing Crown\nIn 1483, Prince Arthur's coronation crown, the legendary 'Stone of Aegis,' vanished from the Tower of London, leaving no forced entry and only a single, perfectly preserved raven feather. For centuries, historians have debated whether the crown was stolen by a rival house or deliberately hidden by the Prince himself, who was never seen again after that night."
+  },
+  "scenes" : [ {
+    "storyText" : "London's fog hung thick like a ghostly shroud, wrapping around the cobblestone streets and curling into the nooks and crannies of its storied past. At the heart of this atmosphere stood Rebecca, a young woman haunted more by curiosity than fear. Today marked the anniversary of Elara's disappearance, an event that had woven itself into the fabric of her family's history, a thread pulled taut with secrets. Clutching the silver locket that once belonged to her missing aunt, Rebecca felt its cool surface against her palm, a talisman of an inquiry that had driven her since she stumbled upon the diary hidden beneath years of neglected family heirlooms. The diary's final entry resonated in her mind: 'He knows the secret of the old lighthouse.' With the weight of Elara's words pressing down on her, she pondered their meaning as the shadows deepened around her. The old lighthouse perched ominously on the cliffs just outside London, a place whispered about in the neighborhood yet largely forgotten over time. Researching the lighthouse, Rebecca discerned fragments of a story that spoke of every storm it had weathered, every soul it had guided—or presumably lost—in the depths of night. In those early hours, Rebecca could feel the air shift around her as if the city's pulse quickened in synchronicity with her own racing thoughts. Was the lighthouse a graveyard of lost family ties, or a sanctuary harboring dark truths? Her gaze drifted toward the Thames, its dark waters whispering of their own secrets as they flowed beneath bridges steeped in history. Each ripple seemed to echo Elara's voice, beckoning her closer to the truth. Today would not be an ordinary day; Rebecca's life would forever be marked by the echoes of the past as she resolved to uncover Elara's fate. Her journey had begun, and with it came the realization that the answers she sought hinged on the uncharted darkness of her family’s past and the lighthouse that loomed in the distance, shrouded in mist and mystery. The truth was out there, waiting—she only needed the courage to pursue it.",
+    "choiceA" : {
+      "id" : "A",
+      "text" : "Investigate the old lighthouse now, despite the risk of trespassing."
+    },
+    "choiceB" : {
+      "id" : "B",
+      "text" : "Visit the local library to uncover more about Elara's life and the lighthouse's history."
+    },
+    "choiceC" : {
+      "id" : "C",
+      "text" : "Confront her family about any known connections to Elara and the lighthouse."
+    },
+    "ending" : false
+  } ],
+  "choiceHistory" : [ {
+    "chapter" : 1,
+    "choiceId" : "C",
+    "choiceDescription" : "Confront her family about any known connections to Elara and the lighthouse."
+  } ],
+  "createdAt" : [ 2025, 12, 11, 9, 20, 55, 734899100 ],
+  "lastModified" : [ 2025, 12, 11, 9, 20, 55, 735898900 ],
+  "totalChapters" : 1,
+  "storyConfiguration" : "{}",
+  "shortSummary" : "London's fog hung thick like a ghostly shroud, wrapping around the cobblestone streets and curling into the nooks and crannies of its storied past. At...",
+  "formattedCreatedDate" : "Dec 11, 2025 09:20",
+  "displayTitle" : "Rebecca's Journey"
+}

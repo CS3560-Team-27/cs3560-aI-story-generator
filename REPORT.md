@@ -2,28 +2,28 @@
 
 ## Challenges We Faced
 
-**Challenge 1:AI Response Parsing Inconsistency**
+### Challenge 1:AI Response Parsing Inconsistency
 
 Problem: OpenAI API sometimes returned responses in different formats - sometimes with structured SCENE/CHOICE_A/CHOICE_B format, sometimes with numbered lists, sometimes unstructured text
 
 Solution: Implemented multiple parsing strategies with fallback mechanisms in OpenAIService.extractSections() method
 Learned: Always handle AI API responses defensively with multiple parsing approaches and meaningful fallbacks
 
-**Challenge 2: Ensuring Exactly Two Choices**
+### Challenge 2: Ensuring Exactly Two Choices
 
 Problem: AI would sometimes generate only one choice or no clear choices, breaking the interactive story flow
 
 Solution: Added robust validation in parseSceneAndChoices() with context-aware fallback choice generation based on scene content
 Learned: AI outputs need validation and business rule enforcement - can't rely on AI to always follow format instructions
 
-**Challenge 3: Story Persistence Without External Libraries**
+### Challenge 3: Story Persistence Without External Libraries
 
 Problem: Needed to save/load complex story objects without using JSON libraries to keep project lightweight
 
 Solution: Implemented custom text-based serialization in StoryLibrary with structured format parsing
 Learned: Simple text formats can be more maintainable than complex serialization, especially for human-readable data
 
-**Challenge 4: Fixing Invalid JSON Errors From the AI**
+### Challenge 4: Fixing Invalid JSON Errors From the AI
 
 Problem: The OpenAI API frequently returned malformed JSON when prompt formatting was even slightly off. There were a few crashes because quotes weren’t escaped, newlines broke JSON structure or the model included commentary instead of pure JSON.
 
@@ -31,7 +31,7 @@ Solution: Wrote a strict toJsonString() escape method and added genre-specific J
 
 This dramatically improved story generation stability.
 
-**Challenge 5: Replacing the Save/Load System by storing data in JSON**
+### Challenge 5: Replacing the Save/Load System by storing data in JSON
 
 Problem: JSON serialization with Jackson turned out to be more complicated than expected, especially because:
 - some models required no-arg constructors,
@@ -40,19 +40,24 @@ Problem: JSON serialization with Jackson turned out to be more complicated than 
 
 Solution: This was resolved by restructuring SavedStoryModel, rewriting StoryModel.setChoiceHistory(), and adding helper methods like restoreCurrentSceneAfterLoad().
 
-**Challenge 6: Testing Non-Deterministic Behavior**
+### Challenge 6: Testing Non-Deterministic Behavior
 
 Problem: Testing was challenging because the API produces unpredictable results.
 We couldn’t call the real OpenAI service in unit tests
 
-Solution: We had to use fake API clients, override internal methods like sendHttp(). We also simulated retries and exceptions and test prompt generation without hitting the network.
+Solution: We had to use fake API clients, override internal methods like sendHttp(). We also simulated retries and exceptions and test prompt generation without hitting the network. This led to a more professional testing structure and increased confidence in our core logic.
 
-This led to a more professional testing structure and increased confidence in our core logic.
+### Challenge 7: Managing Image Generation Rate Limits
 
+Problem:
+When we added automatic AI-generated illustrations per scene, we quickly encountered OpenAI rate limits. Each scene transition triggered both a text generation request and an image prompt request, which made testing difficult and caused frequent HTTP 429 errors during normal gameplay.
+
+Solution:
+We implemented chapter-based image caching inside StoryModel. Each generated image is stored by chapter number and reused whenever the player revisits that chapter or reloads a saved game. Before making any image-generation request, the controller now checks the cache and only generates an image if one does not already exist.
 
 ## Design Pattern Justifications
 
-**MVC Pattern:**
+### MVC Pattern:
 We structured our application using the MVC architecture because it allowed us to separate concerns clearly and it allowed for better maintainability. 
 
 - **The Model layer** (StoryModel, StoryStateModel, SceneModel, CharacterModel, WorldModel) holds all story-related data and state. 
@@ -61,7 +66,7 @@ We structured our application using the MVC architecture because it allowed us t
 
 Using MVC made our codebase easier to manage, debug, and extend, and ensured that UI and logic remained cleanly separated.
 
-**Singleton Pattern:** 
+### Singleton Pattern:
 
 We used the Singleton pattern for OpenAIClient because we only needed one fully configured HTTP client throughout the application. This client manages timeouts, retries, authentication, and JSON escaping for all API calls. 
 By ensuring a single instance, we avoided inconsistencies in request handling and prevented unnecessary resource usage. 
@@ -69,7 +74,7 @@ By ensuring a single instance, we avoided inconsistencies in request handling an
 The singleton also simplified debugging and testing, as it centralized all API communication in one place. 
 We added a reset method strictly for test environments so that our JUnit tests could run without stale state.
 
-**Builder Pattern:** 
+### Builder Pattern:
 
 We applied the Builder pattern in PromptBuilder due to the complexity of constructing AI prompts. 
 A full prompt includes character information, world details, genre-specific rules, user-selected story settings (length, complexity, style), previous scene summaries, and full choice history. 
@@ -77,16 +82,30 @@ A full prompt includes character information, world details, genre-specific rule
 Instead of assembling this in the controller—which would have made the code messy and error-prone—we encapsulated the entire process inside a dedicated builder. 
 This allowed us to maintain consistent JSON formatting, easily adjust prompt logic, and add new genres or rules without modifying core application flow.
 
-**Strategy Pattern:**
+### Strategy Pattern:
 
 To support different storytelling modes, we introduced a StoryModeStrategy interface with two implementations: AdultMode and ChildFriendlyMode. The Strategy pattern lets us swap writing rules dynamically based on user preferences such as complexity level. 
 
 Each strategy injects tone-appropriate adjustments into the prompt—simplified language for child-friendly mode, richer detail or mature themes for adult mode. 
 By structuring tone control this way, our system becomes more flexible and extensible, allowing us to add new modes (e.g., “Poetic Mode,” “Comedic Mode,” “Dark Mode”) without altering the rest of the architecture.
 
-**Observer Pattern:** 
+### Factory Pattern:
+
+We applied the Factory pattern to our image-generation system through the ImagePromptFactory interface and its concrete implementations such as SceneImagePromptFactory and CoverArtPromptFactory. Each factory is responsible for constructing prompts tailored to a specific image use case without exposing construction logic to the controller.
+
+This design allows the controller to request image prompts generically while delegating creation logic to specialized factories. It also enables future expansion (e.g., character portraits or location art) without modifying existing controller code, aligning with the Open–Closed Principle.
+
+### Observer Pattern:
 
 UI components automatically update when story state changes. The controller notifies views when new scenes are generated, implementing loose coupling between model and view layers.
+
+Add a Short System Design Paragraph (New Section)
+
+## Image Generation System Design
+
+Our image generation pipeline is designed to be rate-limit safe and extensible. Image prompts are constructed using a Factory-based system that converts the current story state into a detailed visual description. Generated images are cached by chapter number inside the StoryModel, ensuring that each scene illustration is generated at most once.
+
+This approach minimizes API usage, improves responsiveness when navigating between chapters, and ensures consistent visuals across reloads and saved games. If an image request fails due to rate limits or API errors, the system gracefully falls back to a placeholder image without interrupting story progression.
 
 ## OOP Four Pillars (Where & Why)
 ### Encapsulation
@@ -96,6 +115,7 @@ All model classes—such as StoryModel, StoryStateModel, CharacterModel, WorldMo
 This prevents outside code from modifying the story state incorrectly or bypassing validation. For example, StoryStateModel manages chapter progression and choice history internally, ensuring no external class can jump chapters or corrupt the record list.
 We also encapsulated API logic within OpenAIClient and OpenAIService, ensuring that raw HTTP details and JSON construction never leak into the controller or UI. This made the system more robust, testable, and maintainable.
 
+We also encapsulated scene illustration caching inside StoryModel, preventing the controller or UI from managing image storage directly and ensuring a clean separation of responsibilities.
 ### Inheritance
 We incorporated inheritance primarily within our Strategy subsystem. 
 We created an abstract interface StoryModeStrategy and our two concrete strategies—AdultMode and ChildFriendlyMode—extend this abstraction by providing different implementations of applyToneRules(). 
@@ -128,6 +148,7 @@ AI (ChatGPT) was used to:
 - Provide examples for UML diagrams
 - Improve code readability and documentation
 - Suggest improvements to code structure and applying design patterns
+- Assist with implementing rate-limit handling, fallbacks, and chapter-based image caching
 - JUnit test scaffolding
 - Assist in producing the final written REPORT.md and README.md
 
@@ -141,3 +162,5 @@ No code was used without understanding its functionality.
 - ✅ Clean MVC architecture following project specifications
 - ✅ UI with loading indicators and error dialogs
 - ✅ Comprehensive story customization (genre, length, style, complexity)
+- ✅ Chapter-based image caching to reduce API usage and handle rate limits safely
+

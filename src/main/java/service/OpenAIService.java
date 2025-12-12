@@ -96,4 +96,20 @@ public class OpenAIService {
             throw new Exception("Missing required field \"" + fieldName + "\" in story JSON.");
         }
     }
+
+    /* ==============================================================
+       IMAGE GENERATION → Request an image URL from OpenAI
+       ============================================================== */
+    public String generateImageURL(String prompt) throws Exception {
+
+        String json = client.generateImage(prompt);
+
+        // Extract the first generated URL (OpenAI format)
+        // Example JSON:
+        // { "data": [ { "url": "https://...." } ] }
+        var mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(json);
+        return root.get("data").get(0).get("url").asText();
+    }
+
 }
