@@ -39,3 +39,7 @@ build/
 
 ### ChatGPT API Key ###
 src/main/resources/config.properties
+
+### Saved json data files ###
+saves/
+
