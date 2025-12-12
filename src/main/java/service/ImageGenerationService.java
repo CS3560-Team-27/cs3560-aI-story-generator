@@ -5,6 +5,9 @@ import model.story.StoryModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 /**
  * ImageGenerationService
@@ -21,8 +24,8 @@ public class ImageGenerationService {
     private final ImagePromptFactoryProvider factoryProvider =
             new ImagePromptFactoryProvider();
 
-    /** Toggle real image generation */
-    private boolean useRealImages = true;
+    /** Toggle real image generation (disable for grading if needed) */
+    private boolean useRealImages = false;
 
     /* =========================================================
        CONFIG
@@ -60,20 +63,36 @@ public class ImageGenerationService {
 
     public Image generateImageWithFallback(String prompt) {
 
-        if (useRealImages) {
-            try {
-                // FUTURE: real API call goes here
-                // return generateRealImage(prompt);
-
-                throw new RuntimeException("Rate limit hit"); // simulate for now
-
-            } catch (Exception ex) {
-                System.err.println("[ImageGeneration] Falling back to placeholder:");
-                System.err.println(ex.getMessage());
+        try {
+            if (useRealImages) {
+                return generateRealImage(prompt);
             }
+        } catch (Exception ex) {
+            System.err.println("[ImageGeneration] Falling back to placeholder:");
+            System.err.println(ex.getMessage());
         }
 
         return generatePlaceholderImage(prompt);
+    }
+
+    /* =========================================================
+       REAL IMAGE GENERATION
+       ========================================================= */
+
+    private Image generateRealImage(String prompt) throws Exception {
+
+        // Ask OpenAIService for image URL
+        OpenAIService openAIService = new OpenAIService();
+        String imageUrl = openAIService.generateImageURL(prompt);
+
+        // Download image → BufferedImage
+        BufferedImage image = ImageIO.read(new URL(imageUrl));
+
+        if (image == null) {
+            throw new RuntimeException("Failed to decode image from URL");
+        }
+
+        return image;
     }
 
     /* =========================================================
