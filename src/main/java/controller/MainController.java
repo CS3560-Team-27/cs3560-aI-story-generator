@@ -317,18 +317,7 @@ public class MainController {
             SavedStoryModel saved = saveSystem.loadGame(file);
             if (saved == null) return;
 
-            storyModel = new StoryModel();
-            storyModel.setGenre(saved.getGenre());
-            storyModel.setCharacter(saved.getCharacter());
-            storyModel.setWorld(saved.getWorld());
-            storyModel.setScenes(new ArrayList<>(saved.getScenes()));
-
-            if (saved.getChoiceHistory() != null)
-                storyModel.setChoiceHistory(new ArrayList<>(saved.getChoiceHistory()));
-
-            int chapterCount = saved.getScenes().size();
-            storyModel.setCurrentChapter(chapterCount);
-            storyModel.restoreCurrentSceneAfterLoad();
+            restoreLoadedStory(saved);
 
             mainFrame.showScene(storyModel.getCurrentScene());
             mainFrame.showView(MainFrame.STORY);
@@ -338,6 +327,31 @@ public class MainController {
         } catch (Exception ex) {
             mainFrame.showError("Load Error", ex);
         }
+    }
+
+    /* =========================================================
+       RESTORE SAVED STORY (TEST + INTERNAL USE)
+       ========================================================= */
+
+    public void restoreLoadedStory(SavedStoryModel saved) {
+
+        if (saved == null) return;
+
+        storyModel = new StoryModel();
+        storyModel.setGenre(saved.getGenre());
+        storyModel.setCharacter(saved.getCharacter());
+        storyModel.setWorld(saved.getWorld());
+        storyModel.setScenes(new ArrayList<>(saved.getScenes()));
+
+        if (saved.getChoiceHistory() != null) {
+            storyModel.setChoiceHistory(
+                    new ArrayList<>(saved.getChoiceHistory())
+            );
+        }
+
+        int chapterCount = saved.getScenes().size();
+        storyModel.setCurrentChapter(chapterCount);
+        storyModel.restoreCurrentSceneAfterLoad();
     }
 
     /* =========================================================
